@@ -7,14 +7,15 @@ cd "$(dirname "$0")"
 APP_NAME="WhiteNoise"
 APP="build/${APP_NAME}.app"
 MIN_MACOS="14.2"
-SRC=(WhiteNoiseApp.swift PlayerController.swift AudioMonitor.swift ContentView.swift)
+# 直接收 Sources 下所有 .swift：新增文件不用再改这里（曾因漏加文件白查半天启动崩溃）
+SRC=(Sources/*.swift)
 
 echo "==> 清理旧构建"
 rm -rf build
 mkdir -p "${APP}/Contents/MacOS"
 mkdir -p "${APP}/Contents/Resources"
 
-echo "==> 编译 (swiftc, target ${MIN_MACOS})"
+echo "==> 编译 ${#SRC[@]} 个源文件 (swiftc, target ${MIN_MACOS})"
 swiftc \
   -target arm64-apple-macosx${MIN_MACOS} \
   -framework AppKit \
@@ -31,10 +32,10 @@ echo "==> 拷贝 Info.plist"
 cp Info.plist "${APP}/Contents/Info.plist"
 
 echo "==> 拷贝 App 图标"
-cp AppIcon.icns "${APP}/Contents/Resources/AppIcon.icns"
+cp Resources/AppIcon.icns "${APP}/Contents/Resources/AppIcon.icns"
 
 echo "==> 本地签名 (ad-hoc)"
-codesign --force --deep --sign - "${APP}"
+codesign --force --sign - "${APP}"
 
 echo "==> 完成: ${APP}"
 echo "    双击打开，或在终端执行: open ${APP}"

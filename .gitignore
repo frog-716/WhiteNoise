@@ -13,3 +13,4 @@ build/
 # ===== 编辑器 / 系统 =====
 .idea/
 .vscode/
+.workbuddy/
