@@ -11,7 +11,7 @@ final class PlayerController: ObservableObject {
 
     @Published var isPlaying = false
     @Published var currentURL: URL? = nil
-    @Published var volume: Double = 0.8
+    @Published var launchAtLogin: Bool = false
     @Published var autoPauseEnabled = true
     @Published var statusText = "未选择音频"
     @Published var recentFiles: [URL] = []
@@ -27,6 +27,7 @@ final class PlayerController: ObservableObject {
 
     init() {
         loadRecent()
+        launchAtLogin = SMAppService.mainApp.status == .enabled
         if let last = recentFiles.first {
             open(url: last, autoplay: true)
         }
@@ -46,9 +47,9 @@ final class PlayerController: ObservableObject {
 
     /// 默认打开项目里的「音频」文件夹（根据 App 自身位置自动定位），找不到就退回桌面。
     private var defaultPickDirectory: URL {
-        let projectRoot = Bundle.main.bundleURL      // .../White-Noise/build/White-Noise.app
-            .deletingLastPathComponent()             // .../White-Noise/build
-            .deletingLastPathComponent()             // .../White-Noise
+        let projectRoot = Bundle.main.bundleURL      // .../WhiteNoise/build/WhiteNoise.app
+            .deletingLastPathComponent()             // .../WhiteNoise/build
+            .deletingLastPathComponent()             // .../WhiteNoise
         let audioDir = projectRoot.appendingPathComponent("音频")
         var isDir: ObjCBool = false
         if FileManager.default.fileExists(atPath: audioDir.path, isDirectory: &isDir), isDir.boolValue {
@@ -77,7 +78,7 @@ final class PlayerController: ObservableObject {
         do {
             let newPlayer = try AVAudioPlayer(contentsOf: url)
             newPlayer.numberOfLoops = -1          // -1 = 无限循环
-            newPlayer.volume = Float(volume)
+            newPlayer.volume = 1.0                // 跟随系统音量，不再单独控制
             newPlayer.prepareToPlay()
             player?.stop()
             player = newPlayer
@@ -106,10 +107,6 @@ final class PlayerController: ObservableObject {
         }
     }
 
-    func setVolume(_ v: Double) {
-        volume = v
-        player?.volume = Float(v)
-    }
 
     // MARK: - 监测循环
 
@@ -143,7 +140,7 @@ final class PlayerController: ObservableObject {
 
         // 状态文案（让人知道为什么停了）
         if userPaused {
-            statusText = "已暂停（手动）"
+            statusText = "已暂停：\(currentURL?.lastPathComponent ?? "")"
         } else if !awake {
             statusText = "已暂停：系统睡眠"
         } else if !onConsole {
@@ -159,7 +156,7 @@ final class PlayerController: ObservableObject {
     }
 
     private func startPlayback() {
-        player?.volume = Float(volume)
+        player?.volume = 1.0
         if player?.play() == true {
             isPlaying = true
         }
@@ -172,11 +169,8 @@ final class PlayerController: ObservableObject {
 
     // MARK: - 开机自启
 
-    func isLaunchAtLogin() -> Bool {
-        SMAppService.mainApp.status == .enabled
-    }
-
-    func setLaunchAtLogin(_ on: Bool) {
+    /// 切换登录时启动。无论成败都把开关状态同步成系统真实值，避免「显示已开但实际未注册」的假象。
+    func updateLaunchAtLogin(_ on: Bool) {
         do {
             if on {
                 try SMAppService.mainApp.register()
@@ -186,6 +180,7 @@ final class PlayerController: ObservableObject {
         } catch {
             statusText = "开机自启设置失败：\(error.localizedDescription)"
         }
+        launchAtLogin = SMAppService.mainApp.status == .enabled
     }
 
     // MARK: - 最近文件（记忆上次选择）
@@ -201,7 +196,7 @@ final class PlayerController: ObservableObject {
     private func addRecent(_ url: URL) {
         var list = recentFiles.filter { $0 != url }
         list.insert(url, at: 0)
-        recentFiles = Array(list.prefix(5))
+        recentFiles = Array(list.prefix(2))   // 最近使用只保留最新两首用于点播
         UserDefaults.standard.set(recentFiles.map { $0.absoluteString }, forKey: recentKey)
     }
 }

@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/images/banner.png" alt="White-Noise" width="100%">
+  <img src="docs/images/banner.png" alt="WhiteNoise" width="100%">
 </p>
 
-<h1 align="center">White-Noise</h1>
+<h1 align="center">WhiteNoise</h1>
 
 <p align="center">
   <b>让背景音学会「让路」——别人出声，它就自动安静。</b><br>
@@ -20,12 +20,12 @@
 
 ## 这是什么
 
-**White-Noise** 是一个常驻 macOS 菜单栏的轻量白噪音工具。它能**循环播放你指定的本地音频**（白噪音、雨声、学习氛围音等），并在你开始看视频、听歌或开会——也就是**有其他 App 出声时，自动把背景音暂停**；等对方安静下来，再**自动恢复**。
+**WhiteNoise** 是一个常驻 macOS 菜单栏的轻量白噪音工具。它能**循环播放你指定的本地音频**（白噪音、雨声、学习氛围音等），并在你开始看视频、听歌或开会——也就是**有其他 App 出声时，自动把背景音暂停**；等对方安静下来，再**自动恢复**。
 
 整个过程无需手动切换，也不会打断正在播放的媒体，适合专注工作、阅读、学习或需要稳定环境音的场景。
 
 <p align="center">
-  <img src="docs/images/ui.png" width="360" alt="White-Noise 界面">
+  <img src="docs/images/ui.png" width="360" alt="WhiteNoise 界面">
 </p>
 
 ## ✨ 主要特性
@@ -66,10 +66,10 @@
 ### 编译与运行
 
 ```bash
-git clone https://github.com/frog-716/White-Noise.git
-cd White-Noise
-./build.sh                    # 编译 + 本地签名，生成 build/White-Noise.app
-open build/White-Noise.app    # 启动
+git clone https://github.com/frog-716/WhiteNoise.git
+cd WhiteNoise
+./build.sh                    # 编译 + 本地签名，生成 build/WhiteNoise.app
+open build/WhiteNoise.app    # 启动
 ```
 
 无需 Xcode 工程、无需开发者账号。`build.sh` 使用 `swiftc` 直接编译，并用 ad-hoc 签名打包成 `.app`。
@@ -84,7 +84,7 @@ open build/White-Noise.app    # 启动
 ## 📁 项目结构
 
 ```text
-White-Noise/
+WhiteNoise/
 ├── WhiteNoiseApp.swift      入口（菜单栏图标 + 弹窗）
 ├── PlayerController.swift   播放控制 / 状态轮询 / 文件选择 / 开机自启
 ├── AudioMonitor.swift       Core Audio：谁在出声、是否静音
@@ -117,4 +117,4 @@ White-Noise/
 
 ---
 
-<p align="center"><sub>Made for focused work · macOS menu bar · White-Noise</sub></p>
+<p align="center"><sub>Made for focused work · macOS menu bar · WhiteNoise</sub></p>

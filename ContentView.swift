@@ -1,25 +1,25 @@
 import SwiftUI
 import AppKit
 
-/// 菜单栏弹出的小界面：播放/暂停、音量、选文件、最近文件、自动暂停开关、状态说明。
+/// 菜单栏弹出的小界面：播放/暂停、选文件、最近文件、自动暂停开关、开机自启、退出。
 struct ContentView: View {
     @EnvironmentObject var player: PlayerController
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("White-Noise").font(.headline)
+            // 标题 + 退出按钮（右上角）
+            HStack {
+                Text("WhiteNoise").font(.headline)
+                Spacer()
+                Button("退出") { NSApplication.shared.terminate(nil) }
+            }
 
             Divider()
 
-            HStack(spacing: 10) {
-                Button(action: { player.togglePlay() }) {
-                    Label(player.isPlaying ? "暂停" : "播放",
-                          systemImage: player.isPlaying ? "pause.fill" : "play.fill")
-                        .frame(width: 64)
-                }
-                Slider(value: Binding(get: { player.volume },
-                                     set: { player.setVolume($0) }), in: 0...1)
-                    .frame(width: 130)
+            Button(action: { player.togglePlay() }) {
+                Label(player.isPlaying ? "暂停" : "播放",
+                      systemImage: player.isPlaying ? "pause.fill" : "play.fill")
+                    .frame(width: 64)
             }
 
             Text(player.statusText)
@@ -41,13 +41,9 @@ struct ContentView: View {
             }
 
             Toggle("自动暂停（检测其他声音）", isOn: $player.autoPauseEnabled)
-            Toggle("开机自启", isOn: Binding(get: { player.isLaunchAtLogin() },
-                                            set: { player.setLaunchAtLogin($0) }))
-
-            Divider()
-
-            Button("退出") { NSApplication.shared.terminate(nil) }
-                .frame(maxWidth: .infinity)
+            Toggle("开机自启", isOn: Binding(
+                get: { player.launchAtLogin },
+                set: { player.updateLaunchAtLogin($0) }))
         }
         .padding(16)
         .frame(width: 290)

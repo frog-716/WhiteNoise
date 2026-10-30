@@ -4,7 +4,7 @@ set -e
 
 cd "$(dirname "$0")"
 
-APP_NAME="White-Noise"
+APP_NAME="WhiteNoise"
 APP="build/${APP_NAME}.app"
 MIN_MACOS="14.2"
 SRC=(WhiteNoiseApp.swift PlayerController.swift AudioMonitor.swift ContentView.swift)
