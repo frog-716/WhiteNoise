@@ -36,9 +36,13 @@
 
 <p align="center">
 
-  <img src="docs/images/ui.png" width="380" alt="WhiteNoise 界面">
+  <img src="docs/images/ui.png" width="380" alt="WhiteNoise 界面（正常）">
+
+  <img src="docs/images/ui-error.png" width="380" alt="WhiteNoise 界面（开机自启失败）">
 
 </p>
+
+<p align="center"><sub>右：开机自启注册失败时，按钮内只剩红色 ⚠️，文字让位；宽度不变，面板不撑宽。</sub></p>
 
 ## ✨ 主要特性
 
